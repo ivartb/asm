@@ -191,19 +191,26 @@ int main()
     q(15,16);
 */
 
+    trampoline<int (int, int, char, int)> tr4([&](int a, int b, char c, int d)
+                                                 { return printf("%d %d %c %d %d\n",
+                                                           a, b, c, d, x); });
+    auto a4 = tr4.get();
+    a4(6, 7, 'F', 30);
+
+
     trampoline<int (int, int, int, int, int, int, int)> tr6([&](int a, int b, int c, int d, int e,
                                                                int f, int g)
                                                  { return printf("%d %d %d %d %d %d %d %d\n",
                                                            a, b, c, d, e, x, f, g); });
-    auto r = tr6.get();
-    r(6, 7, 8, 9, 10, 15, 30);
+    auto a6 = tr6.get();
+    a6(6, 7, 8, 9, 10, 15, 30);
 
     trampoline<int (int, int, int, int, int, int, int, char)> tr7([&](int a, int b, int c, int d, int e,
                                                                int f, int g, char ch)
                                                  { return printf("%d %d %d %d %d %d %d %d %c\n",
                                                            a, b, c, d, e, x, f, g, ch); });
-    auto q = tr7.get();
-    q(6, 7, 8, 9, 10, 15, 30, 'A');
+    auto a7 = tr7.get();
+    a7(6, 7, 8, 9, 10, 15, 30, 'A');
 
 }
 //g++ -std=c++14 -Wall -Wextra -Werror trampoline.cpp -o tr
