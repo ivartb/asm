@@ -62,8 +62,6 @@ void resolver::resolve() {
         } else {
             host = *res->ai_addr;
             freeaddrinfo(res);
-            lock.lock();
-            lock.unlock();
         }
         request->set_resolved_host(host);
         log_msg("Host resolved " + request->get_host());
