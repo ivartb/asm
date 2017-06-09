@@ -27,7 +27,6 @@ struct trampoline<T (Args ...)>
         :func_obj(new F(std::move(func))), deleter(my_deleter<F>)
     {
         args_types<Args ...> args;
-        assert(args.valid);
         int INTEGER_ARGS = args.INTEGER_CLASS;
         int SSE_ARGS = args.SSE_CLASS;
 
