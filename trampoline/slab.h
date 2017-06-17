@@ -9,11 +9,16 @@ struct slab
 private:
     void** cur;
     void* mem;
+    int cnt = 0;
+    int allocs = 0;
     const int TR_SIZE = 128;
 
 public:
-    slab()
+    slab(){}
+
+    void init()
     {
+        auto oldmem = mem;
         mem = mmap(nullptr, 4096, PROT_EXEC | PROT_READ |
                          PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         cur = (void**) mem;
@@ -23,18 +28,27 @@ public:
             *(void**)tmp = 0;
             if (i != 0)
                 *(void**)(tmp - TR_SIZE) = tmp;
+            else if (allocs > 1) {
+                *(void**)(static_cast<char*>(mem) + 3968) = tmp;
+            }
         }
     }
 
     ~slab()
     {
-        munmap(mem, 4096);
+        //munmap(mem, 4096);
     }
 
     void* malloc()
     {
+        if (cnt >= allocs * 32)
+        {
+            allocs++;
+            init();
+        }
         void* ans = *cur;
         cur = (void**)cur;
+        cnt++;
         return ans;
     }
 
@@ -42,6 +56,7 @@ public:
     {
         *(void**) ptr = cur;
         cur = (void**) ptr;
+        cnt--;
     }
 };
 

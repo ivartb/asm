@@ -95,6 +95,7 @@ struct trampoline<T (Args ...)>
         }
         else
         {
+            /*
             // return address to r11
             //415B              pop r11
             *pcode++ = 0x41;
@@ -102,6 +103,14 @@ struct trampoline<T (Args ...)>
             // free place on stack
             //50                push rax
             *pcode++ = 0x50;
+            */
+
+            //4C8B1C24          mov r11,[rsp]
+            *pcode++ = 0x4c;
+            *pcode++ = 0x8b;
+            *pcode++ = 0x1c;
+            *pcode++ = 0x24;
+
             // 6th arg on stack
             //4151              push r9
             *pcode++ = 0x41;
@@ -230,6 +239,7 @@ struct trampoline<T (Args ...)>
             *pcode++ = 0x41;
             *pcode++ = 0x59;
 
+            /*
             // rax on ret addr
             //4889E0            mov rax,rsp
             *pcode++ = 0x48;
@@ -248,6 +258,18 @@ struct trampoline<T (Args ...)>
             *pcode++ = 0x4c;
             *pcode++ = 0x8b;
             *pcode++ = 0x18;
+            */
+
+            //4C8B9C24const   mov r11,[rsp+const]
+            *pcode++ = 0x4c;
+            *pcode++ = 0x8b;
+            *pcode++ = 0x9c;
+            *pcode++ = 0x24;
+            *(int32_t*)pcode = sz;
+            pcode += 4;
+
+
+            /*
             // ret addr on top of stack, as it was before the call
             //4159              pop r9
             *pcode++ = 0x41;
@@ -255,6 +277,13 @@ struct trampoline<T (Args ...)>
             //4153              push r11
             *pcode++ = 0x41;
             *pcode++ = 0x53;
+            */
+
+            //4C891C24          mov [rsp],r11
+            *pcode++ = 0x4c;
+            *pcode++ = 0x89;
+            *pcode++ = 0x1c;
+            *pcode++ = 0x24;
 
 
             //C3                ret

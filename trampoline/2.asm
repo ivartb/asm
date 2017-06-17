@@ -1,6 +1,7 @@
 USE64
-pop	r11
-push	rax
+;pop	r11
+;push	rax
+mov     r11, [rsp]
 push	r9
 mov     r9, r8
 mov     r8, rcx
@@ -25,11 +26,13 @@ mov     rdi, 0x0123456789abcdef
 mov     rax, 0x0123456789abcdef
 call    rax
 pop     r9
-mov     rax, rsp
-add     rax, 0x00000000 ; + sz
-mov	r11, [rax]
-pop	r9
-push	r11
+;mov     rax, rsp
+;add     rax, 0x00000000 ; + sz
+;mov	r11, [rax]
+mov     r11, [rsp + 123456]
+;pop	r9
+;push	r11
+mov     [rsp], r11
 ret
 
 
