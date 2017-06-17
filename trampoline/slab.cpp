@@ -2,19 +2,25 @@
 #include <sys/mman.h>
 #include "slab.h"
 
-void slab::alloc_new_chunk()
+namespace
 {
-    void* mem = mmap(nullptr, 4096, PROT_EXEC | PROT_READ |
-                     PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    cur = (void**) mem;
-    if (mem != nullptr)
+    void** cur = nullptr;
+    const int TR_SIZE = 128;
+
+    void alloc_new_chunk()
     {
-        for (auto i = 0; i < 4096; i += TR_SIZE)
+        void* mem = mmap(nullptr, 4096, PROT_EXEC | PROT_READ |
+                         PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        cur = (void**) mem;
+        if (mem != nullptr)
         {
-            auto tmp = static_cast<char*>(mem) + i;
-            *(void**)tmp = 0;
-            if (i != 0)
-                *(void**)(tmp - TR_SIZE) = tmp;
+            for (auto i = 0; i < 4096; i += TR_SIZE)
+            {
+                auto tmp = static_cast<char*>(mem) + i;
+                *(void**)tmp = 0;
+                if (i != 0)
+                    *(void**)(tmp - TR_SIZE) = tmp;
+            }
         }
     }
 }
@@ -37,6 +43,7 @@ void slab::free(void* ptr)
     *(void**) ptr = cur;
     cur = (void**) ptr;
 }
+
 
 
 
