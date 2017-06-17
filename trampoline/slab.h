@@ -29,7 +29,7 @@ public:
             if (i != 0)
                 *(void**)(tmp - TR_SIZE) = tmp;
             else if (allocs > 1) {
-                *(void**)(static_cast<char*>(mem) + 3968) = tmp;
+                *(void**)(static_cast<char*>(oldmem) + 3968) = tmp;
             }
         }
     }
