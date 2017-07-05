@@ -1,0 +1,1 @@
+g++ -std=c++14 utils.h fd_wrap.h fd_wrap.cpp socket_wrap.h socket_wrap.cpp task_wrap.h task_wrap.cpp epoll_wrap.h epoll_wrap.cpp timer_wrap.h http.h http.cpp client.h client.cpp server.h server.cpp proxy.h proxy.cpp main.cpp -lpthread -o proxy
